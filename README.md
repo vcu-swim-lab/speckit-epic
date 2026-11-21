@@ -39,6 +39,12 @@ specify init my-project --integration claude --extension https://github.com/vcu-
 
 Restart your agent session afterwards so it picks up the new commands.
 
+If the download fails (for example with an SSL certificate error), download the ZIP from GitHub in your browser (**Code → Download ZIP**), unzip it, and install from the folder:
+
+```
+specify extension add --dev path/to/speckit-epic-main
+```
+
 ## Commands
 
 | Command | What it does |
