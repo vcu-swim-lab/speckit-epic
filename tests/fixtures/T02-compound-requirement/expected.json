@@ -1,0 +1,18 @@
+{
+  "case_id": "T02",
+  "title": "Compound requirement",
+  "planted_problem": "FR-002 combines validation (two checks) with error display and keeping field contents in one requirement.",
+  "expected_findings": [
+    {
+      "location": "FR-002",
+      "dimension": ["E2"],
+      "evidence": "and MUST display an error message",
+      "expected_issue": "more than one obligation in a single requirement"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "renumbering FR-003 or other requirements",
+    "dropping any of the original obligations when splitting"
+  ],
+  "expected_revision_behavior": "FR-002 is split into FR-002a, FR-002b, ... with every original obligation kept"
+}

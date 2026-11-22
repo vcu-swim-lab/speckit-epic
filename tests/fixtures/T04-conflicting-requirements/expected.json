@@ -1,0 +1,18 @@
+{
+  "case_id": "T04",
+  "title": "Conflicting requirements",
+  "planted_problem": "FR-002 says erase personal data immediately; FR-003 says keep it for 30 days.",
+  "expected_findings": [
+    {
+      "location": ["FR-002", "FR-003"],
+      "dimension": ["I2"],
+      "evidence": "permanently erase all of the user's personal data immediately",
+      "expected_issue": "two requirements contradict each other"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "silently deleting FR-002 or FR-003 to remove the conflict",
+    "choosing one side of the conflict without asking"
+  ],
+  "expected_revision_behavior": "a [NEEDS CLARIFICATION: ...] marker asks which rule wins; both requirement IDs are kept"
+}

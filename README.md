@@ -37,7 +37,7 @@ Or, in a new project:
 specify init my-project --integration claude --extension https://github.com/vcu-swim-lab/speckit-epic/archive/refs/heads/main.zip --trust-extension-urls
 ```
 
-Restart your agent session afterwards so it picks up the new commands.
+Restart your agent session afterwards so it picks up the new command.
 
 If the download fails (for example with an SSL certificate error), download the ZIP from GitHub in your browser (**Code → Download ZIP**), unzip it, and install from the folder:
 
@@ -45,23 +45,23 @@ If the download fails (for example with an SSL certificate error), download the 
 specify extension add --dev path/to/speckit-epic-main
 ```
 
-## Commands
+## Command
 
-| Command | What it does |
-|---|---|
-| `/speckit-epic-framework-review` | Checks the current feature's artifacts against EPIC and writes `epic-review.md`. Report only: it never changes the spec. At the end it asks whether to apply the fixes. |
-| `/speckit-epic-framework-revise` | Rewrites `spec.md` to address the violations in `epic-review.md` and shows what changed. Can also be run on its own later. |
+`/speckit-epic-framework-review` checks the current feature's artifacts against EPIC and writes `epic-review.md`. The report never proposes fixes. At the end it asks:
+
+> Want me to apply these fixes to spec.md? (yes / no / list of V-numbers / high-only)
+
+If you answer yes, it revises `spec.md` and shows what changed. With `--revise`, it skips the question and applies the fixes right away.
 
 Options:
 
 ```
-/speckit-epic-framework-review                        # current feature, violations only
+/speckit-epic-framework-review                        # current feature, then asks
 /speckit-epic-framework-review specs/001-user-login   # a specific feature
 /speckit-epic-framework-review --score                # also include 0-3 scores per dimension
-
-/speckit-epic-framework-revise                        # apply all violations
-/speckit-epic-framework-revise V-001 V-020            # apply only these
-/speckit-epic-framework-revise --high-only            # apply only high-confidence violations
+/speckit-epic-framework-review --revise               # apply all fixes without asking
+/speckit-epic-framework-review --revise high-only     # apply only high-confidence fixes
+/speckit-epic-framework-review --revise V-001 V-020   # apply only these
 ```
 
 ## Workflow
@@ -72,11 +72,11 @@ Options:
         ▼
 /speckit-epic-framework-review ──► epic-review.md
         │
-  "Apply these fixes to spec.md?"
+  "Apply these fixes to spec.md?"  (skipped with --revise)
    │            │
    no          yes
    │            ▼
-   │   /speckit-epic-framework-revise ──► revised spec.md + diff
+   │   revised spec.md + diff
    │            │
    │            ▼
    │   /speckit-clarify ──► you answer the open questions
@@ -94,12 +94,12 @@ All in the feature folder, for example `specs/001-user-login/`:
 
 | File | Produced by | Contents |
 |---|---|---|
-| `epic-review.md` | review | Each violation with its EPIC practice ID, location, exact quote, reason and confidence |
-| `spec.md` | revise | The revised specification |
-| `spec.before-epic-revise.md` | revise | Backup of the spec before revision. Copy it back over `spec.md` to undo. |
-| `epic-revise-log.md` | revise | Which violations were fixed, which need a human decision, and which were skipped |
+| `epic-review.md` | always | Each violation with its EPIC practice ID, location, exact quote, reason and confidence |
+| `spec.md` | after yes / `--revise` | The revised specification |
+| `spec.before-epic-revise.md` | after yes / `--revise` | Backup of the spec before revision. Copy it back over `spec.md` to undo. |
+| `epic-revise-log.md` | after yes / `--revise` | Which violations were fixed, which need a human decision, and which were skipped |
 
-## How revise behaves
+## How the revise step behaves
 
 - **It never invents values.** If a fix needs a decision (for example, how long a reset link stays valid), it inserts `[NEEDS CLARIFICATION: ...]` instead. Answer these with `/speckit-clarify`.
 - **It keeps requirement IDs.** Compound requirements are split with sub-letters (`FR-004` becomes `FR-004a`, `FR-004b`), never renumbered.

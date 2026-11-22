@@ -1,0 +1,17 @@
+{
+  "case_id": "T01",
+  "title": "Ambiguous performance term",
+  "planted_problem": "FR-001 says 'quickly' with no number, unit or condition.",
+  "expected_findings": [
+    {
+      "location": "FR-001",
+      "dimension": ["E1", "E3"],
+      "evidence": "quickly",
+      "expected_issue": "vague, untestable performance requirement"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "inventing a numeric login time (for example '2 seconds') that is not in the spec"
+  ],
+  "expected_revision_behavior": "FR-001 gets a [NEEDS CLARIFICATION: ...] marker asking for the target time"
+}

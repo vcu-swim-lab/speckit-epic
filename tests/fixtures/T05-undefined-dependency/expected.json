@@ -1,0 +1,25 @@
+{
+  "case_id": "T05",
+  "title": "Undefined external dependency",
+  "planted_problem": "FR-002 relies on 'the shipping rate service', which is never named, described, or listed in Assumptions, and nothing says what happens when it is unavailable.",
+  "expected_findings": [
+    {
+      "location": "FR-002",
+      "dimension": ["P1"],
+      "evidence": "the shipping rate service",
+      "expected_issue": "external dependency is not declared or described"
+    },
+    {
+      "location": "FR-002",
+      "dimension": ["P1", "P2"],
+      "evidence": "the shipping rate service",
+      "expected_issue": "no behavior defined for when the dependency fails or is unavailable",
+      "optional": true
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "naming a specific provider (for example 'UPS' or 'FedEx') that is not in the spec",
+    "inventing a fallback shipping price"
+  ],
+  "expected_revision_behavior": "[NEEDS CLARIFICATION: ...] markers ask which service is used and what happens when it is unavailable"
+}

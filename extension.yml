@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: epic-framework
   name: "EPIC Framework Spec Quality"
-  version: "0.2.0"
+  version: "0.3.0"
   description: "Check Spec Kit artifacts against the EPIC framework, report violations, and optionally revise spec.md to address them"
   author: "VCU SE Center"
   repository: https://github.com/vcu-swim-lab/speckit-epic
@@ -17,10 +17,7 @@ provides:
   commands:
     - name: speckit.epic-framework.review
       file: commands/speckit.epic-framework.review.md
-      description: "Report the parts of the current feature's spec, plan, and tasks that violate EPIC practices, without fixing them"
-    - name: speckit.epic-framework.revise
-      file: commands/speckit.epic-framework.revise.md
-      description: "Revise the feature's spec.md to address the violations in epic-review.md, then show what changed"
+      description: "Report the parts of the current feature's spec, plan, and tasks that violate EPIC practices, then optionally revise spec.md to address them"
 
 tags:
   - "epic"

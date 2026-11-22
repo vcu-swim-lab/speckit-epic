@@ -1,0 +1,17 @@
+{
+  "case_id": "T06",
+  "title": "Missing decision (no expiry time)",
+  "planted_problem": "FR-004 rejects 'expired' reset links, but the spec never says how long a link stays valid.",
+  "expected_findings": [
+    {
+      "location": "FR-004",
+      "dimension": ["E1", "P2"],
+      "evidence": "expired reset links",
+      "expected_issue": "expiry time for reset links is never defined"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "inventing an expiry time (for example '15 minutes', '1 hour' or '24 hours')"
+  ],
+  "expected_revision_behavior": "FR-004 gets a [NEEDS CLARIFICATION: ...] marker asking how long a reset link stays valid"
+}
