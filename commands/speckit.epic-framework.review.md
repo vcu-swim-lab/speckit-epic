@@ -14,9 +14,13 @@ $ARGUMENTS
 
 The input is optional. It may contain:
 
-- A feature directory (for example `specs/001-user-login`). If absent, use the current feature.
+- Which feature to review. One of:
+  - nothing: the current feature.
+  - a feature directory, for example `specs/002-contact-form`.
+  - a feature number, for example `002`: the directory under `specs/` whose name starts with `002-`.
+  - `--all`: every feature under `specs/` (see "Reviewing all features" below).
 - `--score`: also include the 0–3 dimension scores. Without it, the report lists violations only.
-- `--revise`: after writing the report, apply the fixes without asking (the same as answering "yes"). It can be followed by `high-only` or a list of V-numbers (for example `--revise high-only` or `--revise V-001 V-004`) to limit which violations are applied.
+- `--revise`: after writing the report, apply the fixes without asking (the same as answering "yes"). It can be followed by `high-only` or a list of V-numbers (for example `--revise high-only` or `--revise V-001 V-004`) to limit which violations are applied. With `--all`, only `--revise` or `--revise high-only` is allowed, because V-numbers differ per feature.
 
 ## Reference material
 
@@ -31,9 +35,11 @@ For the report (Steps 3 and 4), ignore the "Writing and revising artifacts" sect
 
 ## Step 1: Find the feature
 
-1. If the user gave a feature directory, use it.
-2. Otherwise read `.specify/feature.json` and use its `feature_directory`.
-3. If neither exists, tell the user to run the specify command first, and stop.
+1. If the user gave `--all`, follow "Reviewing all features" at the end of this command instead.
+2. If the user gave a feature directory, use it.
+3. If the user gave a feature number (digits only, for example `002`), list the directories under `specs/` and use the one whose name starts with that number followed by `-`. If none matches, or more than one matches, list the available feature directories and stop.
+4. Otherwise read `.specify/feature.json` and use its `feature_directory`.
+5. If none of these gives a directory, tell the user to run the specify command first, and stop.
 
 Set `FEATURE_DIR` to that directory.
 
@@ -116,6 +122,8 @@ Report rules:
 - Phrase findings about the artifacts, not about the people who wrote them.
 
 ## Step 5: Report and ask
+
+(With `--all`, see "Reviewing all features" instead: it never asks.)
 
 Tell the user:
 
@@ -202,3 +210,22 @@ For each selected violation, make the **smallest change** to `spec.md` that reso
 - The path to the change log and the backup.
 - How to undo: copy `spec.before-epic-revise.md` back over `spec.md`.
 - If any `[NEEDS CLARIFICATION]` markers were added, suggest answering them with `/speckit-clarify`, then running this command again to check the revised spec.
+
+## Reviewing all features (`--all`)
+
+Use this section only when the user gave `--all`.
+
+1. **Find the features.** List every directory directly under `specs/` that contains a `spec.md`, in name order. If there are none, tell the user and stop. Directories without a `spec.md` are listed as skipped.
+2. **Check the options.** If `--revise` is followed by V-numbers, tell the user that V-numbers cannot be used with `--all` (they differ per feature) and stop. `--revise` and `--revise high-only` are allowed.
+3. **Review each feature.** For each feature directory, set `FEATURE_DIR` to it and run Steps 2–4 exactly as for a single feature, writing that feature's own `epic-review.md`. Use a separate, fresh sub-agent for each feature when your agent supports it, so one review cannot influence another. Respect `--score` if given.
+4. **Do not ask.** With `--all`, never ask "Want me to apply these fixes?".
+   - **Without `--revise`:** do not change any spec. Stop after the summary.
+   - **With `--revise`:** for each feature, run Step 6 with that feature's review and selection (all, or `high-only`), in the main session, one feature at a time. Each feature gets its own `spec.before-epic-revise.md` and `epic-revise-log.md` in its own directory. Step 6 rules apply to each feature separately: never change a feature's files because of another feature's review.
+5. **Summarize.** Show one table at the end:
+
+   | Feature | Violations (E / P / I / C) | High confidence | Applied | Needs a decision | Skipped |
+   |---|---|---|---|---|---|
+   | 001-user-login | 26 (13 / 7 / 5 / 1) | 6 | 5 | 10 | 21 |
+
+   Leave the Applied, Needs a decision and Skipped columns out when `--revise` was not given. Then list the path to each `epic-review.md` (and each `epic-revise-log.md` if fixes were applied).
+6. **Next steps.** Without `--revise`: suggest fixing one feature at a time, for example `/speckit-epic-framework-review 002 --revise`. With `--revise`: say how to undo per feature (copy that feature's `spec.before-epic-revise.md` back over its `spec.md`), and suggest answering the `[NEEDS CLARIFICATION]` markers with `/speckit-clarify`, one feature at a time.

@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: epic-framework
   name: "EPIC Framework Spec Quality"
-  version: "0.3.0"
+  version: "0.4.0"
   description: "Check Spec Kit artifacts against the EPIC framework, report violations, and optionally revise spec.md to address them"
   author: "VCU SE Center"
   repository: https://github.com/vcu-swim-lab/speckit-epic

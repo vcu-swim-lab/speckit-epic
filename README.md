@@ -57,12 +57,24 @@ Options:
 
 ```
 /speckit-epic-framework-review                        # current feature, then asks
-/speckit-epic-framework-review specs/001-user-login   # a specific feature
+/speckit-epic-framework-review specs/002-contact-form # a specific feature
+/speckit-epic-framework-review 002                    # the same, by feature number
 /speckit-epic-framework-review --score                # also include 0-3 scores per dimension
 /speckit-epic-framework-review --revise               # apply all fixes without asking
 /speckit-epic-framework-review --revise high-only     # apply only high-confidence fixes
 /speckit-epic-framework-review --revise V-001 V-020   # apply only these
+/speckit-epic-framework-review 002 --revise           # feature 002, apply all fixes
 ```
+
+To check every feature in `specs/` at once:
+
+```
+/speckit-epic-framework-review --all                    # review every feature, change nothing
+/speckit-epic-framework-review --all --revise           # review and fix every feature
+/speckit-epic-framework-review --all --revise high-only # review every feature, fix high-confidence only
+```
+
+`--all` never asks a question. It ends with a summary table, one row per feature. Each feature gets its own `epic-review.md`, and with `--revise` its own backup and log. V-numbers cannot be used with `--all`, because they differ per feature.
 
 ## Workflow
 

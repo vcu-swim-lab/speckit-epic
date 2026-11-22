@@ -8,7 +8,7 @@
 
 The README documents one agent command (since v0.3.0; the separate revise command was removed):
 
-- `/speckit-epic-framework-review [feature-path] [--score] [--revise [high-only | violation-IDs]]` reviews feature artifacts and writes `epic-review.md` without changing the specification. It then asks whether to apply fixes; on "yes", or immediately with `--revise`, it revises `spec.md`, creates `spec.before-epic-revise.md`, and writes `epic-revise-log.md`.
+- `/speckit-epic-framework-review [feature-path | feature-number | --all] [--score] [--revise [high-only | violation-IDs]]` reviews feature artifacts and writes `epic-review.md` without changing the specification. It then asks whether to apply fixes; on "yes", or immediately with `--revise`, it revises `spec.md`, creates `spec.before-epic-revise.md`, and writes `epic-revise-log.md`.
 
 Important behavioral contracts to test:
 
