@@ -34,6 +34,7 @@ A subscriber clicks the unsubscribe link at the bottom of a newsletter email and
 ### Key Entities
 
 - **Subscriber**: an email address with a status of either `subscribed` or `unsubscribed`.
+- **Unsubscribe link**: a link containing a token. The link is **valid** when its token matches a subscriber, and **not valid** when it matches no subscriber. Unsubscribe links do not expire.
 
 ## Success Criteria
 

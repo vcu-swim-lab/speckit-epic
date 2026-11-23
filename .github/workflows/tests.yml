@@ -1,0 +1,62 @@
+name: tests
+
+# Free, deterministic checks. No AI agent is called and no secrets are used.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: Manifest and fixture checks (pytest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: pip install -r tests/requirements.txt
+      - name: Run pytest
+        run: python -m pytest tests -v
+
+  install:
+    name: Install into a real Spec Kit project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Spec Kit (specify CLI)
+        run: |
+          pip install uv
+          uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+          specify version || true
+      - name: Copy the extension without .git
+        run: |
+          mkdir -p "$RUNNER_TEMP/ext/speckit-epic"
+          rsync -a --exclude .git ./ "$RUNNER_TEMP/ext/speckit-epic/"
+      - name: Create a project and install the extension
+        run: |
+          cd "$RUNNER_TEMP"
+          specify init proj --integration claude --script sh --non-interactive --ignore-agent-tools \
+            --extension "$RUNNER_TEMP/ext/speckit-epic"
+      - name: Check the installed files
+        run: |
+          set -e
+          P="$RUNNER_TEMP/proj"
+          test -f "$P/.specify/extensions/epic-framework/extension.yml"
+          test -f "$P/.specify/extensions/epic-framework/references/epic-skill.md"
+          test -f "$P/.specify/extensions/epic-framework/references/practices.md"
+          test -f "$P/.claude/skills/speckit-epic-framework-review/SKILL.md"
+          test ! -e "$P/.claude/skills/speckit-epic-framework-revise"
+          grep -q -- "--revise" "$P/.claude/skills/speckit-epic-framework-review/SKILL.md"
+          want=$(grep -E '^\s*version:' extension.yml | head -1 | sed -E 's/.*"(.*)".*/\1/')
+          got=$(grep -E '^\s*version:' "$P/.specify/extensions/epic-framework/extension.yml" | head -1 | sed -E 's/.*"(.*)".*/\1/')
+          echo "repo version: $want, installed version: $got"
+          test "$want" = "$got"
+          echo "Install check passed."

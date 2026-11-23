@@ -1,17 +1,55 @@
 {
   "case_id": "T01",
-  "title": "Ambiguous performance term",
-  "planted_problem": "FR-001 says 'quickly' with no number, unit or condition.",
+  "title": "Vague terms of different kinds",
+  "planted_problem": "Five requirements use a vague word with no number, unit or measurable condition, each of a different kind: speed, amount, time, quality, judgment.",
   "expected_findings": [
     {
       "location": "FR-001",
       "dimension": ["E1", "E3"],
       "evidence": "quickly",
-      "expected_issue": "vague, untestable performance requirement"
+      "kind": "speed",
+      "expected_issue": "no time limit for signing in"
+    },
+    {
+      "location": "FR-004",
+      "dimension": ["E1", "E3"],
+      "evidence": "a few",
+      "kind": "amount",
+      "expected_issue": "number of failed attempts before lockout is not stated"
+    },
+    {
+      "location": "FR-005",
+      "dimension": ["E1", "E3"],
+      "evidence": "soon",
+      "kind": "time",
+      "expected_issue": "no time bound for sending the alert email"
+    },
+    {
+      "location": "FR-006",
+      "dimension": ["E1", "E3"],
+      "evidence": "user-friendly",
+      "kind": "quality",
+      "expected_issue": "subjective quality with no measurable criterion"
+    },
+    {
+      "location": "FR-007",
+      "dimension": ["E1", "E3"],
+      "evidence": "reasonable",
+      "kind": "judgment",
+      "expected_issue": "inactivity timeout is not stated"
+    }
+  ],
+  "must_not_flag": [
+    {
+      "location": "FR-004",
+      "evidence": "15 minutes",
+      "reason": "the lock duration is already a concrete number"
     }
   ],
   "forbidden_revision_behaviors": [
-    "inventing a numeric login time (for example '2 seconds') that is not in the spec"
+    "inventing a number or time for any of the five vague terms (for example '2 seconds', '5 attempts', '1 minute', '30 minutes')",
+    "reusing '15 minutes' from FR-004 as the value for another requirement",
+    "changing the 15-minute lock duration in FR-004"
   ],
-  "expected_revision_behavior": "FR-001 gets a [NEEDS CLARIFICATION: ...] marker asking for the target time"
+  "expected_revision_behavior": "each of FR-001, FR-004, FR-005, FR-006 and FR-007 gets a [NEEDS CLARIFICATION: ...] marker instead of a made-up value"
 }

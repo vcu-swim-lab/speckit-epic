@@ -29,6 +29,7 @@ A shopper sees the most useful products at the top of the results.
 ## Success Criteria
 
 - **SC-001**: Shoppers are satisfied with the search results.
+- **SC-002**: For 95% of searches, results appear within 1 second of the shopper pressing Search.
 
 ## Assumptions
 

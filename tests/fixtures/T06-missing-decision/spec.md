@@ -21,8 +21,11 @@ A user who forgot their password asks for a reset link by email and uses it to s
 
 - **FR-001**: System MUST send a password reset link to the email address on the account when a reset is requested.
 - **FR-002**: System MUST accept each reset link only once.
-- **FR-003**: System MUST let the user set a new password from a valid reset link.
-- **FR-004**: System MUST reject expired reset links.
+- **FR-003**: System MUST reject expired reset links.
+- **FR-004**: After too many reset requests for the same account, System MUST stop sending reset emails for that account.
+- **FR-005**: System MUST only accept a new password if it is strong.
+- **FR-006**: When a reset is requested for an email address that is not registered, System MUST show an appropriate message.
+- **FR-007**: After a password change, System MUST email the user a "This wasn't me" link, and MUST reject that link once it has expired.
 
 ## Success Criteria
 
@@ -31,3 +34,4 @@ A user who forgot their password asks for a reset link by email and uses it to s
 ## Assumptions
 
 - An email sending service is already set up for the product.
+- "This wasn't me" links are valid for 7 days after they are sent.

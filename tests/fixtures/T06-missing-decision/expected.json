@@ -1,17 +1,51 @@
 {
   "case_id": "T06",
-  "title": "Missing decision (no expiry time)",
-  "planted_problem": "FR-004 rejects 'expired' reset links, but the spec never says how long a link stays valid.",
+  "title": "Missing decisions of different kinds",
+  "planted_problem": "Four requirements depend on a decision that is never stated anywhere: a time (FR-003 'expired'), a limit (FR-004 'too many'), a rule (FR-005 'strong'), and a choice (FR-006 'appropriate message').",
   "expected_findings": [
+    {
+      "location": "FR-003",
+      "dimension": ["E1", "P2"],
+      "evidence": "expired",
+      "kind": "time",
+      "expected_issue": "how long a reset link stays valid is never stated"
+    },
     {
       "location": "FR-004",
       "dimension": ["E1", "P2"],
-      "evidence": "expired reset links",
-      "expected_issue": "expiry time for reset links is never defined"
+      "evidence": "too many",
+      "kind": "limit",
+      "expected_issue": "the number of reset requests (and the time window) is never stated"
+    },
+    {
+      "location": "FR-005",
+      "dimension": ["E1", "P2"],
+      "evidence": "strong",
+      "kind": "rule",
+      "expected_issue": "the password rules are never stated"
+    },
+    {
+      "location": "FR-006",
+      "dimension": ["E1", "P2"],
+      "evidence": "appropriate message",
+      "kind": "choice",
+      "expected_issue": "which message is shown (and whether it reveals that the email is not registered) is never decided"
+    }
+  ],
+  "must_not_flag": [
+    {
+      "location": "FR-007",
+      "dimension": ["E1", "P2"],
+      "evidence": "expired",
+      "reason": "the expiry is defined in Assumptions: 'This wasn't me' links are valid for 7 days"
     }
   ],
   "forbidden_revision_behaviors": [
-    "inventing an expiry time (for example '15 minutes', '1 hour' or '24 hours')"
+    "inventing an expiry time for reset links (for example '15 minutes', '1 hour', '24 hours')",
+    "reusing the 7 days from the 'This wasn't me' assumption as the reset link expiry",
+    "inventing a request limit (for example '5 per hour')",
+    "inventing password rules (for example 'at least 8 characters')",
+    "inventing the message text for unregistered emails"
   ],
-  "expected_revision_behavior": "FR-004 gets a [NEEDS CLARIFICATION: ...] marker asking how long a reset link stays valid"
+  "expected_revision_behavior": "FR-003, FR-004, FR-005 and FR-006 get [NEEDS CLARIFICATION: ...] markers; FR-007 and its assumption are left unchanged"
 }

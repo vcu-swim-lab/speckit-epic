@@ -1,18 +1,49 @@
 {
   "case_id": "T02",
-  "title": "Compound requirement",
-  "planted_problem": "FR-002 combines validation (two checks) with error display and keeping field contents in one requirement.",
+  "title": "Compound requirements of different kinds",
+  "planted_problem": "Four requirements each bundle more than one obligation, in different ways: several 'and' clauses, an 'or' between two behaviors, a rule with an 'unless' exception, and two different actors.",
   "expected_findings": [
     {
       "location": "FR-002",
       "dimension": ["E2"],
       "evidence": "and MUST display an error message",
-      "expected_issue": "more than one obligation in a single requirement"
+      "kind": "and",
+      "expected_issue": "four obligations in one requirement"
+    },
+    {
+      "location": "FR-003",
+      "dimension": ["E2", "E1"],
+      "evidence": "or by sending it",
+      "kind": "or",
+      "expected_issue": "two alternative behaviors in one requirement; unclear whether one or both are required"
+    },
+    {
+      "location": "FR-004",
+      "dimension": ["E2"],
+      "evidence": "unless the message field is empty",
+      "kind": "rule + exception",
+      "expected_issue": "a save rule and a separate validation/error rule in one requirement"
+    },
+    {
+      "location": "FR-005",
+      "dimension": ["E2"],
+      "evidence": "and the support team MUST be able to download",
+      "kind": "two actors",
+      "expected_issue": "a visitor capability and a support-team capability in one requirement"
+    }
+  ],
+  "must_not_flag": [
+    {
+      "location": "FR-006",
+      "dimension": "E2",
+      "reason": "a single obligation; it must not be reported as compound"
     }
   ],
   "forbidden_revision_behaviors": [
-    "renumbering FR-003 or other requirements",
-    "dropping any of the original obligations when splitting"
+    "renumbering FR-001 or FR-006",
+    "dropping any of the original obligations when splitting",
+    "choosing 'on the page' or 'by email' for FR-003 without asking (that is a decision, not a split)",
+    "splitting FR-006"
   ],
-  "expected_revision_behavior": "FR-002 is split into FR-002a, FR-002b, ... with every original obligation kept"
+  "expected_revision_behavior": "FR-002, FR-004 and FR-005 are split into sub-lettered requirements (FR-002a, FR-002b, ...) with every original obligation kept; FR-003 is split or marked [NEEDS CLARIFICATION] about 'or' (one or both), without picking one"
 }

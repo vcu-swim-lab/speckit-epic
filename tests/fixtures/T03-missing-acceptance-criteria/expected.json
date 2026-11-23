@@ -22,9 +22,17 @@
       "expected_issue": "success criterion is not measurable"
     }
   ],
+  "must_not_flag": [
+    {
+      "location": "SC-002",
+      "dimension": ["E1", "E3"],
+      "reason": "measurable: a percentage, a time limit and a clear start point"
+    }
+  ],
   "forbidden_revision_behaviors": [
     "inventing a ranking rule (for example 'sort by sales') that is not in the spec",
-    "inventing a satisfaction percentage or survey score"
+    "inventing a satisfaction percentage or survey score",
+    "changing the numbers in SC-002 (95%, 1 second)"
   ],
   "expected_revision_behavior": "FR-003 and SC-001 get [NEEDS CLARIFICATION: ...] markers"
 }
