@@ -54,6 +54,11 @@ jobs:
           test -f "$P/.specify/extensions/epic-framework/references/practices.md"
           test -f "$P/.claude/skills/speckit-epic-framework-review/SKILL.md"
           test ! -e "$P/.claude/skills/speckit-epic-framework-revise"
+          # Development files must not be installed into users' projects (.extensionignore)
+          test ! -e "$P/.specify/extensions/epic-framework/tests"
+          test ! -e "$P/.specify/extensions/epic-framework/.github"
+          test ! -e "$P/.specify/extensions/epic-framework/.extensionignore"
+          test -f "$P/.specify/extensions/epic-framework/LICENSE"
           grep -q -- "--revise" "$P/.claude/skills/speckit-epic-framework-review/SKILL.md"
           want=$(grep -E '^\s*version:' extension.yml | head -1 | sed -E 's/.*"(.*)".*/\1/')
           got=$(grep -E '^\s*version:' "$P/.specify/extensions/epic-framework/extension.yml" | head -1 | sed -E 's/.*"(.*)".*/\1/')

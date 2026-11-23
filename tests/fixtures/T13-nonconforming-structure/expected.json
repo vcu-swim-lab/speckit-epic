@@ -1,0 +1,42 @@
+{
+  "case_id": "T13",
+  "title": "Not following the template and ID conventions (I1)",
+  "planted_problem": "Three conformance problems: the ID FR-003 is used twice, one requirement uses a different ID format (REQ-5), and the mandatory Success Criteria section is replaced by a non-template 'Goals' section.",
+  "skip_style_checks": true,
+  "expected_findings": [
+    {
+      "location": "FR-003",
+      "dimension": ["I1", "I2"],
+      "evidence": "Any member MUST be able to mark an item as bought.",
+      "kind": "duplicate ID",
+      "expected_issue": "FR-003 is assigned to two different requirements"
+    },
+    {
+      "location": "REQ-5",
+      "dimension": ["I1", "I2"],
+      "evidence": "REQ-5",
+      "kind": "inconsistent ID format",
+      "expected_issue": "one requirement uses REQ-5 instead of the FR-### format"
+    },
+    {
+      "location": "Goals",
+      "dimension": ["I1", "P2", "E3"],
+      "evidence": "## Goals",
+      "kind": "missing mandatory section",
+      "expected_issue": "the Spec Kit template's Success Criteria section is missing; a non-template Goals section is used instead"
+    }
+  ],
+  "must_not_flag": [
+    {
+      "location": ["FR-006a", "FR-006b"],
+      "dimension": "I1",
+      "reason": "sub-lettered IDs are an allowed convention for split requirements"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "renumbering FR-001, FR-002 or FR-006a/FR-006b",
+    "deleting one of the two FR-003 requirements",
+    "inventing success criteria values (numbers, percentages, times)"
+  ],
+  "expected_revision_behavior": "the second FR-003 gets a new unused ID; REQ-5 gets an FR-### ID; a Success Criteria section is added with [NEEDS CLARIFICATION] instead of invented targets"
+}

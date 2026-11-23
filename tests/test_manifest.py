@@ -87,6 +87,15 @@ def test_references_exist_and_cover_all_dimensions():
         assert f"### {dim} " in practices, f"practices.md has no section for {dim}"
 
 
+def test_extensionignore_keeps_dev_files_out_of_installs():
+    ignore = (ROOT / ".extensionignore").read_text(encoding="utf-8").splitlines()
+    patterns = {line.strip() for line in ignore if line.strip() and not line.startswith("#")}
+    assert {"tests/", ".github/"} <= patterns
+    # Files the extension needs at runtime must not be ignored.
+    for needed in ("commands/", "references/", "extension.yml", "LICENSE", "README.md"):
+        assert needed not in patterns
+
+
 def test_readme_documents_current_options():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     for text in ("/speckit-epic-framework-review", "--revise", "--all", "--score"):

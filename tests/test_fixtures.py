@@ -26,6 +26,11 @@ def load(case_dir):
     return spec, expected
 
 
+def all_artifact_text(case_dir):
+    """spec.md plus any other artifacts in the fixture (plan.md, tasks.md, ...)."""
+    return "\n".join(p.read_text(encoding="utf-8") for p in sorted(case_dir.glob("*.md")))
+
+
 def test_there_are_fixtures():
     assert CASE_DIRS, "no fixture folders found"
 
@@ -57,10 +62,11 @@ def test_expected_json_schema(case_dir):
 @pytest.mark.parametrize("case_dir", CASE_DIRS, ids=lambda p: p.name)
 def test_evidence_and_locations_exist_in_spec(case_dir):
     spec, expected = load(case_dir)
+    artifacts = all_artifact_text(case_dir)
     entries = expected["expected_findings"] + expected.get("must_not_flag", [])
     for entry in entries:
         for evidence in as_list(entry.get("evidence", [])):
-            assert evidence in spec, f"evidence {evidence!r} is not in spec.md"
+            assert evidence in artifacts, f"evidence {evidence!r} is not in any artifact of the fixture"
         for location in as_list(entry["location"]):
             if REQUIREMENT_ID.match(location):
                 assert f"**{location}**" in spec, f"location {location} is not in spec.md"
@@ -68,7 +74,9 @@ def test_evidence_and_locations_exist_in_spec(case_dir):
 
 @pytest.mark.parametrize("case_dir", CASE_DIRS, ids=lambda p: p.name)
 def test_spec_follows_spec_kit_style(case_dir):
-    spec, _ = load(case_dir)
+    spec, expected = load(case_dir)
+    if expected.get("skip_style_checks"):
+        pytest.skip("this fixture breaks the template on purpose")
     assert spec.startswith("# Feature Specification:")
     for section in ("## User Scenarios & Testing", "## Requirements", "## Success Criteria"):
         assert section in spec, f"missing section {section}"

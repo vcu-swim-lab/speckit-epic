@@ -82,6 +82,13 @@ Current fixture test cases (each plants several problems of **different kinds**,
 | T05 | Checkout payment | Dependencies: unnamed service, named service with no failure behavior, unstated precondition (saved card) | TaxCalc (declared, with failure behavior) |
 | T06 | Password reset | Missing decisions: expiry time, request limit, password rules, message choice | FR-007 expiry (defined in Assumptions) |
 | T07 | Newsletter unsubscribe | None (clean control) | No high-confidence findings on FR/SC |
+| T13 | Shared shopping list | I1 conformance: duplicate ID (two FR-003), wrong ID format (REQ-5), Success Criteria replaced by "Goals" | FR-006a/FR-006b (allowed sub-letters) |
+| T14 | Expense approval | I3 comprehension: undefined abbreviations (AL, L2), status codes with no legend (S2, S3), rule with no rationale (90 days) | FR-005 (states its reason) |
+| T15 | Profile photo upload | C1 scope: storage technology (AWS S3), library (Sharp), project-management content (who and by when) | FR-004 (file types and size are product constraints) |
+| T16 | Export orders to CSV | C2 planning: plan.md with no technical context, tasks.md with vague, untraceable, unordered tasks | The spec's FR/SC (problems are only in plan and tasks) |
+| T17 | Dark mode setting | None (second clean control) | No high-confidence findings on FR/SC |
+
+T08–T12 are operation checks (below), not fixtures, so the new fixtures are numbered from T13.
 | T08 | Review operation | `spec.md` remains byte-for-byte unchanged |
 | T09 | Revise compound requirement | Original ID preserved or split into letter-suffixed IDs |
 | T10 | Revision operation | Backup and revision log created; unrelated files unchanged |

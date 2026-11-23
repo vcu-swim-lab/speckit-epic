@@ -1,0 +1,42 @@
+{
+  "case_id": "T14",
+  "title": "Hard to understand without explanation (I3)",
+  "planted_problem": "Three comprehension problems: undefined abbreviations (AL, L2), status codes with no legend (S2, S3), and an unusual rule with no rationale (the 90-day photo limit).",
+  "expected_findings": [
+    {
+      "location": "FR-002",
+      "dimension": ["I3", "E1"],
+      "evidence": ["AL", "L2"],
+      "kind": "undefined abbreviations",
+      "expected_issue": "AL and L2 are never explained"
+    },
+    {
+      "location": ["FR-004", "Scenario 2"],
+      "dimension": ["I3", "E1"],
+      "evidence": ["S2", "S3"],
+      "kind": "notation with no legend",
+      "expected_issue": "status codes S2 and S3 are never defined"
+    },
+    {
+      "location": "FR-003",
+      "dimension": ["I3"],
+      "evidence": "90 days",
+      "kind": "rule with no rationale",
+      "expected_issue": "no reason is given for the 90-day photo limit, so an agent cannot apply its intent to related cases"
+    }
+  ],
+  "must_not_flag": [
+    {
+      "location": "FR-005",
+      "dimension": "I3",
+      "reason": "the rule states its rationale ('so that nobody can approve money paid to themselves')"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "inventing what AL, L2, S2 or S3 stand for",
+    "inventing an amount for the AL",
+    "inventing a reason for the 90-day limit",
+    "changing FR-005"
+  ],
+  "expected_revision_behavior": "AL, L2, S2, S3 and the 90-day rationale get [NEEDS CLARIFICATION] markers asking for definitions and the reason"
+}

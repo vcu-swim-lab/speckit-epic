@@ -1,0 +1,6 @@
+# Files kept in the repository for development and CI, but not copied into users' projects on install.
+tests/
+.github/
+.gitignore
+__pycache__/
+.pytest_cache/
