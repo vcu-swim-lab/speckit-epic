@@ -12,7 +12,7 @@ At checkout, a shopper enters their address, sees the shipping cost and tax, and
 **Acceptance Scenarios**:
 
 1. **Given** a cart with items and a valid address, **When** the shopper reaches the payment step, **Then** the shipping cost and tax are shown and added to the order total.
-2. **Given** a cart with items and a valid address, **When** the TaxCalc API does not respond, **Then** checkout is blocked and the shopper sees "Tax can't be calculated right now. Please try again."
+2. **Given** a cart with items and a valid address, **When** the TaxCalc API does not respond within 10 seconds, **Then** checkout is blocked and the shopper sees "Tax can't be calculated right now. Please try again."
 
 ## Requirements
 
@@ -23,7 +23,7 @@ At checkout, a shopper enters their address, sees the shipping cost and tax, and
 - **FR-003**: System MUST charge the order total using Stripe.
 - **FR-004**: Shoppers MUST be able to pay with their saved card.
 - **FR-005**: System MUST calculate sales tax using the TaxCalc API.
-- **FR-006**: When the TaxCalc API does not respond, System MUST block checkout and show "Tax can't be calculated right now. Please try again."
+- **FR-006**: When the TaxCalc API does not respond within 10 seconds, System MUST block checkout and show "Tax can't be calculated right now. Please try again."
 
 ## Success Criteria
 

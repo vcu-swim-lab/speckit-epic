@@ -1,0 +1,35 @@
+{
+  "case_id": "T15",
+  "expected_findings": [
+    {
+      "requirement_id": "FR-002",
+      "dimension": [
+        "C1"
+      ],
+      "evidence": "AWS S3 bucket",
+      "expected_issue": "names a storage technology instead of the observable behavior"
+    },
+    {
+      "requirement_id": "FR-003",
+      "dimension": [
+        "C1"
+      ],
+      "evidence": "Sharp image library",
+      "expected_issue": "names an implementation library; the observable behavior is the 256 by 256 size"
+    },
+    {
+      "requirement_id": "FR-005",
+      "dimension": [
+        "C1"
+      ],
+      "evidence": "implemented by Ali by Friday",
+      "expected_issue": "an assignment and deadline belong in plan or task artifacts, not in the product spec"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "replacing S3 or Sharp with another named technology",
+    "dropping the 256 by 256 size or the 5 MB limit",
+    "creating plan.md or tasks.md",
+    "changing FR-004 or FR-006"
+  ]
+}

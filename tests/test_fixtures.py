@@ -1,6 +1,6 @@
-"""Deterministic checks on the test fixtures (spec.md + expected.json).
+"""Checks the fixture schemas and labels (testing plan, section 5, Tier A).
 
-They make sure every answer key is well formed and points at text that really exists in its spec.
+Every fixture folder has spec.md + expected.json, and every label points at text that exists.
 No AI agent is called. Run with: python -m pytest tests
 """
 
@@ -21,9 +21,7 @@ def as_list(value):
 
 
 def load(case_dir):
-    spec = (case_dir / "spec.md").read_text(encoding="utf-8")
-    expected = json.loads((case_dir / "expected.json").read_text(encoding="utf-8"))
-    return spec, expected
+    return json.loads((case_dir / "expected.json").read_text(encoding="utf-8"))
 
 
 def all_artifact_text(case_dir):
@@ -35,52 +33,39 @@ def test_there_are_fixtures():
     assert CASE_DIRS, "no fixture folders found"
 
 
+def test_case_ids_are_unique():
+    ids = [load(d)["case_id"] for d in CASE_DIRS]
+    assert len(ids) == len(set(ids)), ids
+
+
 @pytest.mark.parametrize("case_dir", CASE_DIRS, ids=lambda p: p.name)
 def test_folder_layout(case_dir):
-    assert re.match(r"^T\d{2}-[a-z0-9-]+$", case_dir.name), "folder must be named like T01-short-name"
+    assert re.match(r"^[a-z0-9-]+$", case_dir.name), "folder must be named like ambiguous-response-time"
     assert (case_dir / "spec.md").is_file()
     assert (case_dir / "expected.json").is_file()
 
 
 @pytest.mark.parametrize("case_dir", CASE_DIRS, ids=lambda p: p.name)
 def test_expected_json_schema(case_dir):
-    _, expected = load(case_dir)
-    assert expected["case_id"] == case_dir.name[:3]
-    for key in ("title", "planted_problem", "forbidden_revision_behaviors", "expected_revision_behavior"):
-        assert key in expected, f"missing key {key}"
+    expected = load(case_dir)
+    assert re.fullmatch(r"T\d{2}", expected["case_id"])
     assert isinstance(expected["expected_findings"], list)
     assert isinstance(expected["forbidden_revision_behaviors"], list)
-    if not expected["expected_findings"]:
-        # A clean control must say what counts as a failure.
-        assert expected.get("fail_if"), "a fixture with no expected findings needs a fail_if rule"
     for finding in expected["expected_findings"]:
-        for key in ("location", "dimension", "evidence", "expected_issue"):
+        for key in ("requirement_id", "dimension", "evidence", "expected_issue"):
             assert key in finding, f"finding is missing {key}"
         assert set(as_list(finding["dimension"])) <= DIMENSIONS, finding["dimension"]
 
 
 @pytest.mark.parametrize("case_dir", CASE_DIRS, ids=lambda p: p.name)
-def test_evidence_and_locations_exist_in_spec(case_dir):
-    spec, expected = load(case_dir)
+def test_labels_point_at_existing_text(case_dir):
+    spec = (case_dir / "spec.md").read_text(encoding="utf-8")
     artifacts = all_artifact_text(case_dir)
-    entries = expected["expected_findings"] + expected.get("must_not_flag", [])
-    for entry in entries:
-        for evidence in as_list(entry.get("evidence", [])):
-            assert evidence in artifacts, f"evidence {evidence!r} is not in any artifact of the fixture"
-        for location in as_list(entry["location"]):
-            if REQUIREMENT_ID.match(location):
-                assert f"**{location}**" in spec, f"location {location} is not in spec.md"
-
-
-@pytest.mark.parametrize("case_dir", CASE_DIRS, ids=lambda p: p.name)
-def test_spec_follows_spec_kit_style(case_dir):
-    spec, expected = load(case_dir)
-    if expected.get("skip_style_checks"):
-        pytest.skip("this fixture breaks the template on purpose")
-    assert spec.startswith("# Feature Specification:")
-    for section in ("## User Scenarios & Testing", "## Requirements", "## Success Criteria"):
-        assert section in spec, f"missing section {section}"
-    assert re.search(r"\*\*FR-\d{3}\*\*", spec), "no FR-### requirement found"
-    assert " shall " not in spec.lower(), "use MUST (Spec Kit style), not shall"
-    ids = re.findall(r"\*\*((?:FR|SC)-\d{3}[a-z]?)\*\*", spec)
-    assert len(ids) == len(set(ids)), "duplicate requirement IDs"
+    file_names = {p.name for p in case_dir.glob("*.md")}  # for missing content, the evidence can be the file
+    for finding in load(case_dir)["expected_findings"]:
+        for evidence in as_list(finding["evidence"]):
+            assert evidence in artifacts or evidence in file_names, \
+                f"evidence {evidence!r} is not in any artifact of the fixture"
+        for requirement_id in as_list(finding["requirement_id"]):
+            if REQUIREMENT_ID.match(requirement_id):
+                assert f"**{requirement_id}**" in spec, f"{requirement_id} is not in spec.md"

@@ -25,7 +25,8 @@ A user who forgot their password asks for a reset link by email and uses it to s
 - **FR-004**: After too many reset requests for the same account, System MUST stop sending reset emails for that account.
 - **FR-005**: System MUST only accept a new password if it is strong.
 - **FR-006**: When a reset is requested for an email address that is not registered, System MUST show an appropriate message.
-- **FR-007**: After a password change, System MUST email the user a "This wasn't me" link, and MUST reject that link once it has expired.
+- **FR-007**: After a password change, System MUST email the user a "This wasn't me" link.
+- **FR-008**: System MUST reject a "This wasn't me" link once it has expired.
 
 ## Success Criteria
 

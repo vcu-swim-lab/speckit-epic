@@ -1,0 +1,55 @@
+{
+  "case_id": "T01",
+  "expected_findings": [
+    {
+      "requirement_id": "FR-001",
+      "dimension": [
+        "E1",
+        "E3"
+      ],
+      "evidence": "quickly",
+      "expected_issue": "no time limit for signing in"
+    },
+    {
+      "requirement_id": "FR-004",
+      "dimension": [
+        "E1",
+        "E3"
+      ],
+      "evidence": "a few",
+      "expected_issue": "number of failed attempts before lockout is not stated"
+    },
+    {
+      "requirement_id": "FR-005",
+      "dimension": [
+        "E1",
+        "E3"
+      ],
+      "evidence": "soon",
+      "expected_issue": "no time bound for sending the alert email"
+    },
+    {
+      "requirement_id": "FR-006",
+      "dimension": [
+        "E1",
+        "E3"
+      ],
+      "evidence": "user-friendly",
+      "expected_issue": "subjective quality with no measurable criterion"
+    },
+    {
+      "requirement_id": "FR-007",
+      "dimension": [
+        "E1",
+        "E3"
+      ],
+      "evidence": "reasonable",
+      "expected_issue": "inactivity timeout is not stated"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "inventing a number or time for any of the five vague terms (for example '2 seconds', '5 attempts', '1 minute', '30 minutes')",
+    "reusing '15 minutes' from FR-004 as the value for another requirement",
+    "changing the 15-minute lock duration in FR-004"
+  ]
+}

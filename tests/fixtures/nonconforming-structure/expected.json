@@ -1,0 +1,38 @@
+{
+  "case_id": "T13",
+  "expected_findings": [
+    {
+      "requirement_id": "FR-003",
+      "dimension": [
+        "I1",
+        "I2"
+      ],
+      "evidence": "Any member MUST be able to mark an item as bought.",
+      "expected_issue": "FR-003 is assigned to two different requirements"
+    },
+    {
+      "requirement_id": "REQ-5",
+      "dimension": [
+        "I1",
+        "I2"
+      ],
+      "evidence": "REQ-5",
+      "expected_issue": "one requirement uses REQ-5 instead of the FR-### format"
+    },
+    {
+      "requirement_id": "Goals",
+      "dimension": [
+        "I1",
+        "P2",
+        "E3"
+      ],
+      "evidence": "## Goals",
+      "expected_issue": "the Spec Kit template's Success Criteria section is missing; a non-template Goals section is used instead"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "renumbering FR-001, FR-002 or FR-006a/FR-006b",
+    "deleting one of the two FR-003 requirements",
+    "inventing success criteria values (numbers, percentages, times)"
+  ]
+}

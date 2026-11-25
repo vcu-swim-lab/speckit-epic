@@ -1,0 +1,8 @@
+{
+  "case_id": "T17",
+  "expected_findings": [],
+  "forbidden_revision_behaviors": [
+    "changing the meaning of any requirement",
+    "adding new requirements or scope"
+  ]
+}

@@ -6,9 +6,10 @@
 
 ## 1. What the extension currently does
 
-The README documents one agent command (since v0.3.0; the separate revise command was removed):
+The README documents two agent commands:
 
-- `/speckit-epic-framework-review [feature-path | feature-number | --all] [--score] [--revise [high-only | violation-IDs]]` reviews feature artifacts and writes `epic-review.md` without changing the specification. It then asks whether to apply fixes; on "yes", or immediately with `--revise`, it revises `spec.md`, creates `spec.before-epic-revise.md`, and writes `epic-revise-log.md`.
+- `/speckit-epic-framework-review [feature-path] [--score]` reviews feature artifacts and writes `epic-review.md` without changing the specification.
+- `/speckit-epic-framework-revise [violation-IDs | --high-only]` revises `spec.md`, creates `spec.before-epic-revise.md`, and writes `epic-revise-log.md`.
 
 Important behavioral contracts to test:
 
@@ -17,8 +18,7 @@ Important behavioral contracts to test:
 - Revision does not invent unspecified requirements or values; it marks unresolved decisions with `[NEEDS CLARIFICATION: ...]`.
 - Revision preserves requirement IDs; a split compound requirement uses sub-letters (such as `FR-004a`, `FR-004b`).
 - Revision changes only `spec.md` among existing project artifacts; it does not modify code, `plan.md`, `tasks.md`, checklists, or the constitution.
-- Selective revision changes only the selected violations, and `--revise high-only` respects the confidence filtering.
-- Without `--revise`, a non-interactive run writes the report and changes nothing else.
+- Selective revision changes only the selected violations, and `--high-only` respects the confidence filtering.
 
 Treat these as documented *expected behaviors*, not as behaviors already validated by tests.
 
@@ -71,24 +71,17 @@ Start with **10–20 short specifications**, each containing one or two intentio
 - **Interpretable:** I1 Conforming, I2 Consistent, I3 Comprehensible.
 - **Compartmentalized:** C1 Scope Discipline, C2 Implementation-Planning Information.
 
-Current fixture test cases (each plants several problems of **different kinds**, plus a trap that must **not** be flagged):
+Suggested first test cases:
 
-| ID | Fixture | Planted problems | Trap (must not flag) |
-|---|---|---|---|
-| T01 | Sign-in | Vague words: "quickly", "a few", "soon", "user-friendly", "reasonable" | "15 minutes" (a real number) |
-| T02 | Contact form | Compound requirements: "and", "or", rule + "unless" exception, two actors | FR-006 (single obligation) |
-| T03 | Product search | Not verifiable: "best results", "satisfied", a user story with no scenarios | SC-002 ("95% within 1 second") |
-| T04 | Account deletion | Contradictions: requirement vs requirement, requirement vs scenario, number vs number | FR-006 vs Scenario 2 (different moments) |
-| T05 | Checkout payment | Dependencies: unnamed service, named service with no failure behavior, unstated precondition (saved card) | TaxCalc (declared, with failure behavior) |
-| T06 | Password reset | Missing decisions: expiry time, request limit, password rules, message choice | FR-007 expiry (defined in Assumptions) |
-| T07 | Newsletter unsubscribe | None (clean control) | No high-confidence findings on FR/SC |
-| T13 | Shared shopping list | I1 conformance: duplicate ID (two FR-003), wrong ID format (REQ-5), Success Criteria replaced by "Goals" | FR-006a/FR-006b (allowed sub-letters) |
-| T14 | Expense approval | I3 comprehension: undefined abbreviations (AL, L2), status codes with no legend (S2, S3), rule with no rationale (90 days) | FR-005 (states its reason) |
-| T15 | Profile photo upload | C1 scope: storage technology (AWS S3), library (Sharp), project-management content (who and by when) | FR-004 (file types and size are product constraints) |
-| T16 | Export orders to CSV | C2 planning: plan.md with no technical context, tasks.md with vague, untraceable, unordered tasks | The spec's FR/SC (problems are only in plan and tasks) |
-| T17 | Dark mode setting | None (second clean control) | No high-confidence findings on FR/SC |
-
-T08–T12 are operation checks (below), not fixtures, so the new fixtures are numbered from T13.
+| ID | Fixture | Expected check |
+|---|---|---|
+| T01 | `FR-001: Users shall be able to log in quickly.` | Ambiguity / untestable performance term reported |
+| T02 | One requirement combines validation and error display | Singular requirement issue identified |
+| T03 | Requirement missing measurable acceptance criteria | Verifiability issue reported |
+| T04 | Two requirements contradict each other | Inconsistency reported |
+| T05 | Dependency on an undefined external service | Missing dependency information reported |
+| T06 | Password reset link has no expiration policy | Missing decision flagged; no fabricated timeout |
+| T07 | Well-specified feature | Avoid unsupported findings |
 | T08 | Review operation | `spec.md` remains byte-for-byte unchanged |
 | T09 | Revise compound requirement | Original ID preserved or split into letter-suffixed IDs |
 | T10 | Revision operation | Backup and revision log created; unrelated files unchanged |
@@ -131,19 +124,6 @@ Example expected labels (`expected.json`):
 ```
 
 **Important:** Have a person validate gold labels against the EPIC rubric before using them as ground truth. Some requirements can implicate more than one EPIC dimension. Record acceptable alternatives, and do not make tests depend on one exact wording.
-
-### Auto-generated specs (to avoid tuning fixtures until they pass)
-
-Hand-written fixtures can be edited until the tool passes them. To avoid that bias, the same seven cases are also run on **specs generated by `/speckit-specify`**, with no hand edits:
-
-1. Generate the spec from a one-line feature idea.
-2. Append the planted lines automatically. The ideas and planted lines are fixed **before** any run in `injections.json` and are not edited after seeing results.
-3. Run `/speckit-epic-framework-review <number> --revise high-only`.
-4. Grade automatically: was each planted line found (and at what confidence), was the backup correct, were any values invented.
-
-Limit: the generated spec may already contain or define what is planted (for example, it may already state a reset-link expiry), so a planted line is not always a single clean problem. Check those cases by hand.
-
-The first version of these scripts (`injections.json`, `run-auto-case.ps1`, `grade-auto.ps1`) lives outside the repository for now, in the local test project.
 
 ## 4. Build isolated integration tests
 
@@ -242,31 +222,29 @@ Use it for **test organization and installation smoke-test design**, not as a co
 
 ### Phase 1 — Foundation
 
-Status as of 2026-11-23: [x] done, [~] partly done, [ ] not started.
-
-- [~] Add `tests/` and pytest configuration/dependencies. (`tests/` and fixtures exist; no pytest yet.)
-- [~] Add 10–20 compact, labeled fixture specs covering all ten EPIC dimensions, including clean examples. (7 fixtures; I1, I3, C1 and C2 not covered; one clean control.)
-- [ ] Validate and version the gold labels. (Needs a person to check each `expected.json`.)
+- [ ] Add `tests/` and pytest configuration/dependencies.
+- [ ] Add 10–20 compact, labeled fixture specs covering all ten EPIC dimensions, including clean examples.
+- [ ] Validate and version the gold labels.
 - [ ] Add deterministic checks for manifest, command files, fixture schemas, and stable artifact naming.
 - [ ] Configure a fast GitHub Actions PR workflow.
 
 ### Phase 2 — Real installation and workflow
 
-- [~] Add helper to create a temporary Spec Kit project and install the checked-out extension locally. (Done by script, not yet in the repo.)
-- [x] Verify the review command creates the expected report without touching source specs.
-- [x] Verify the revision command creates a backup and log, preserves IDs, and leaves unrelated files unchanged.
-- [x] Test selective revision and `--revise high-only` behavior.
-- [~] Test unresolved decisions, repeat revision, and invalid or missing review inputs. (Unresolved decisions and repeat revision tested; invalid or missing inputs not tested.)
+- [ ] Add helper to create a temporary Spec Kit project and install the checked-out extension locally.
+- [ ] Verify the review command creates the expected report without touching source specs.
+- [ ] Verify the revision command creates a backup and log, preserves IDs, and leaves unrelated files unchanged.
+- [ ] Test selective revision and `--high-only` behavior.
+- [ ] Test unresolved decisions, repeat revision, and invalid or missing review inputs.
 - [ ] Add a manually triggered, credential-protected agent integration workflow.
 
 ### Phase 3 — Empirical quality evaluation
 
-- [~] Write a finding extractor and matching/scoring script. (`grade-auto.ps1`, outside the repo.)
-- [~] Compare agent findings with labeled expected EPIC violations. (Done for T01–T07, one run each.)
-- [~] Evaluate revised specs for fixes, invented requirements, and new regressions. (Invented values checked automatically; regressions not measured.)
+- [ ] Write a finding extractor and matching/scoring script.
+- [ ] Compare agent findings with labeled expected EPIC violations.
+- [ ] Evaluate revised specs for fixes, invented requirements, and new regressions.
 - [ ] Run cases repeatedly with fixed, documented settings.
-- [~] Publish a simple machine-readable CSV/JSON summary and a human-readable report. (Readable reports only.)
-- [x] Add realistic multi-issue specifications after the small fixtures work. (Auto-generated specs with planted lines.)
+- [ ] Publish a simple machine-readable CSV/JSON summary and a human-readable report.
+- [ ] Add realistic multi-issue specifications after the small fixtures work.
 
 ### Definition of done for initial implementation
 
@@ -276,7 +254,7 @@ A maintainer can clone the repository, run a fast `pytest` command locally, run 
 
 - Pin or record versions: Spec Kit, Claude Code/agent CLI, model, and extension commit. The extension README currently states Spec Kit 1.4.0+ and notes testing with 1.4.4 and Claude Code.
 - LLM findings are judgments; a literal string mismatch is not necessarily a failure.
-- Keep original fixture text immutable and avoid test-order dependencies. (The fixtures were rewritten several times while the test set was being designed. From now on, treat them as fixed; the auto-generated tests already follow this rule.)
+- Keep original fixture text immutable and avoid test-order dependencies.
 - Keep generated outputs and secrets out of git unless explicitly published.
 - Respect API quotas and test spending limits.
 - Use the README's actual command syntax and output file names; verify CLI flags against the locally installed versions.

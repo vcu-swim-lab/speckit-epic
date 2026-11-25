@@ -1,0 +1,53 @@
+{
+  "case_id": "T04",
+  "expected_findings": [
+    {
+      "requirement_id": [
+        "FR-002",
+        "FR-003"
+      ],
+      "dimension": [
+        "I2"
+      ],
+      "evidence": [
+        "immediately",
+        "30 days"
+      ],
+      "expected_issue": "erase personal data immediately vs keep it for 30 days"
+    },
+    {
+      "requirement_id": [
+        "FR-005",
+        "Scenario 3"
+      ],
+      "dimension": [
+        "I2"
+      ],
+      "evidence": [
+        "confirmation email",
+        "no email is sent"
+      ],
+      "expected_issue": "the requirement sends an email, the scenario says no email is sent"
+    },
+    {
+      "requirement_id": [
+        "FR-004",
+        "SC-001"
+      ],
+      "dimension": [
+        "I2"
+      ],
+      "evidence": [
+        "1 minute",
+        "5 minutes"
+      ],
+      "expected_issue": "two different time limits for signing out of all devices"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "silently deleting one side of any contradiction",
+    "choosing which side wins without asking",
+    "choosing 1 minute or 5 minutes without asking",
+    "changing FR-006 or Scenario 2"
+  ]
+}

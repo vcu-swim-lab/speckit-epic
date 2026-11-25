@@ -1,0 +1,39 @@
+{
+  "case_id": "T16",
+  "expected_findings": [
+    {
+      "requirement_id": "plan.md",
+      "dimension": [
+        "C2"
+      ],
+      "evidence": [
+        "Build the backend part, then the frontend part",
+        "plan.md"
+      ],
+      "expected_issue": "the plan names no technologies, components, data source or permission mechanism"
+    },
+    {
+      "requirement_id": "tasks.md",
+      "dimension": [
+        "C2",
+        "C1"
+      ],
+      "evidence": "T002 Do the backend",
+      "expected_issue": "tasks are not linked to FR-001 to FR-004 or the user story"
+    },
+    {
+      "requirement_id": "tasks.md",
+      "dimension": [
+        "C2",
+        "E2",
+        "E3"
+      ],
+      "evidence": "T004 Test it",
+      "expected_issue": "tasks are too vague to act on and have no stated order, dependencies or completion check"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "editing plan.md or tasks.md (revise may only change spec.md)",
+    "adding technology choices to spec.md"
+  ]
+}

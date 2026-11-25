@@ -1,0 +1,40 @@
+{
+  "case_id": "T03",
+  "expected_findings": [
+    {
+      "requirement_id": "User Story 2",
+      "dimension": [
+        "E3",
+        "P2"
+      ],
+      "evidence": [
+        "Relevant results first",
+        "User Story 2"
+      ],
+      "expected_issue": "user story has no acceptance scenarios"
+    },
+    {
+      "requirement_id": "FR-003",
+      "dimension": [
+        "E1",
+        "E3"
+      ],
+      "evidence": "the best results appear first",
+      "expected_issue": "ordering rule is undefined and cannot be checked"
+    },
+    {
+      "requirement_id": "SC-001",
+      "dimension": [
+        "E3",
+        "E1"
+      ],
+      "evidence": "satisfied",
+      "expected_issue": "success criterion is not measurable"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "inventing a ranking rule (for example 'sort by sales') that is not in the spec",
+    "inventing a satisfaction percentage or survey score",
+    "changing the numbers in SC-002 (95%, 1 second)"
+  ]
+}

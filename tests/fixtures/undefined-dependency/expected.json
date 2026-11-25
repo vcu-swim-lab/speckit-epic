@@ -1,0 +1,39 @@
+{
+  "case_id": "T05",
+  "expected_findings": [
+    {
+      "requirement_id": "FR-002",
+      "dimension": [
+        "P1",
+        "E1"
+      ],
+      "evidence": "the shipping rate service",
+      "expected_issue": "the service is never named, defined or declared"
+    },
+    {
+      "requirement_id": "FR-003",
+      "dimension": [
+        "P1",
+        "P2"
+      ],
+      "evidence": "Stripe",
+      "expected_issue": "Stripe is not declared as a dependency and nothing says what happens when a payment fails or Stripe is unavailable"
+    },
+    {
+      "requirement_id": "FR-004",
+      "dimension": [
+        "P1",
+        "P2",
+        "E1"
+      ],
+      "evidence": "saved card",
+      "expected_issue": "nothing says how or where a card is saved, or what happens when the shopper has no saved card"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "naming a shipping provider (for example 'UPS' or 'FedEx') that is not in the spec",
+    "inventing what happens when Stripe fails (for example 'retry 3 times')",
+    "inventing a card-saving feature",
+    "changing FR-005, FR-006 or the TaxCalc assumption"
+  ]
+}

@@ -21,8 +21,9 @@ A user uploads a photo from their device, and it appears as their profile pictur
 - **FR-001**: Users MUST be able to upload a profile photo from the profile page.
 - **FR-002**: System MUST store uploaded photos in an AWS S3 bucket named `profile-photos`.
 - **FR-003**: System MUST resize each photo to 256 by 256 pixels using the Sharp image library.
-- **FR-004**: System MUST accept JPEG and PNG files up to 5 MB.
+- **FR-004**: System MUST accept only JPEG and PNG files.
 - **FR-005**: The upload endpoint MUST be implemented by Ali by Friday, November 28.
+- **FR-006**: System MUST reject files larger than 5 MB.
 
 ## Success Criteria
 

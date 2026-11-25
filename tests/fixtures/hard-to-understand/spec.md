@@ -20,7 +20,7 @@ An employee submits an expense with a receipt photo, and it is routed for approv
 
 - **FR-001**: Employees MUST be able to submit an expense with an amount, a date, a category and a receipt photo.
 - **FR-002**: Expenses above the AL MUST be routed to L2 instead of the employee's manager.
-- **FR-003**: System MUST reject a receipt photo taken more than 90 days before the expense is submitted.
+- **FR-003**: System MUST reject a receipt photo that breaks the photo rules in Section 6.
 - **FR-004**: An approved expense MUST move from S2 to S3.
 - **FR-005**: Managers MUST NOT be able to approve their own expenses, so that nobody can approve money paid to themselves.
 

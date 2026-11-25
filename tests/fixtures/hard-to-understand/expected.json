@@ -1,0 +1,48 @@
+{
+  "case_id": "T14",
+  "expected_findings": [
+    {
+      "requirement_id": "FR-002",
+      "dimension": [
+        "I3",
+        "E1"
+      ],
+      "evidence": [
+        "AL",
+        "L2"
+      ],
+      "expected_issue": "AL and L2 are never explained"
+    },
+    {
+      "requirement_id": [
+        "FR-004",
+        "Scenario 2"
+      ],
+      "dimension": [
+        "I3",
+        "E1"
+      ],
+      "evidence": [
+        "S2",
+        "S3"
+      ],
+      "expected_issue": "status codes S2 and S3 are never defined"
+    },
+    {
+      "requirement_id": "FR-003",
+      "dimension": [
+        "I3",
+        "E1",
+        "P2"
+      ],
+      "evidence": "Section 6",
+      "expected_issue": "FR-003 refers to photo rules in a Section 6 that does not exist, so the rules cannot be found"
+    }
+  ],
+  "forbidden_revision_behaviors": [
+    "inventing what AL, L2, S2 or S3 stand for",
+    "inventing an amount for the AL",
+    "inventing the photo rules of Section 6",
+    "changing FR-005"
+  ]
+}
